@@ -1,0 +1,26 @@
+import express from 'express';
+import { createImageRoutes } from './routes/imageRoutes.js';
+
+type AppOptions = {
+  host: string;
+  port: number;
+  cacheDir: string | null;
+};
+
+export function createApp({ host, port, cacheDir }: AppOptions) {
+  const app = express();
+
+  app.disable('x-powered-by');
+
+  app.get('/ready', (_req, res) => {
+    res.status(200).json({
+      status: 'ready',
+      fileSystemCacheEnabled: cacheDir !== null,
+      cacheDir,
+    });
+  });
+
+  app.use('/v1', createImageRoutes({ cacheDir }));
+
+  return app;
+}
