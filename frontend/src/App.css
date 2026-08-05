@@ -1,0 +1,450 @@
+.app-shell {
+  min-height: 100vh;
+  padding: 42px 44px 48px;
+  background: var(--app-shell-background);
+}
+
+.app-content[aria-hidden='true'] {
+  filter: blur(0.5px);
+  pointer-events: none;
+  user-select: none;
+}
+
+.app-header {
+  margin-bottom: 26px;
+}
+
+.app-header__row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.app-header h1 {
+  margin: 0;
+}
+
+.app-header p {
+  margin-top: 12px;
+  max-width: 900px;
+}
+
+.app-settings-button {
+  flex: 0 0 auto;
+  margin-top: 2px;
+}
+
+.workspace {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.panel {
+  background: var(--panel-bg);
+  border: 1px solid var(--panel-border);
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: var(--panel-shadow);
+  backdrop-filter: blur(5px);
+}
+
+.panel-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 18px;
+}
+
+.panel-heading__title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.panel-heading h2 {
+  margin: 0;
+}
+
+.badge {
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: var(--badge-bg);
+  color: var(--badge-fg);
+}
+
+.badge.muted {
+  background: var(--badge-muted-bg);
+  color: var(--badge-muted-fg);
+}
+
+.field-label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 600;
+  color: var(--field-label);
+}
+
+.decklist-textarea {
+  width: 100%;
+  min-height: 560px;
+  resize: none;
+  border-radius: 12px;
+  border: 1px solid var(--input-border);
+  background: var(--input-bg);
+  padding: 14px;
+  font: 15px/1.5 'IBM Plex Mono', 'SFMono-Regular', Consolas, monospace;
+  color: var(--input-fg);
+}
+
+.text-input {
+  width: 100%;
+  height: 44px;
+  border-radius: 10px;
+  border: 1px solid var(--input-border);
+  background: var(--input-bg);
+  padding: 0 12px;
+  font: 14px/1.4 'IBM Plex Sans', 'Segoe UI', sans-serif;
+  color: var(--input-fg);
+}
+
+.decklist-textarea:focus,
+.text-input:focus {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 0;
+  border-color: var(--focus-ring);
+}
+
+.hint-text {
+  margin-top: 10px;
+  color: var(--hint-text);
+}
+
+.settings-hint {
+  margin-bottom: 22px;
+}
+
+.settings-section-separator {
+  margin: 0 0 18px;
+}
+
+.settings-section-separator__line {
+  display: block;
+  width: 100%;
+  height: 1px;
+  background: var(--panel-border);
+}
+
+.settings-section-heading {
+  margin-bottom: 10px;
+}
+
+.settings-section-title {
+  margin: 0;
+  font-size: 14px;
+  color: var(--settings-title);
+}
+
+.settings-section-subtitle {
+  margin: 6px 0 0;
+  font-size: 13px;
+  color: var(--settings-subtitle);
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.settings-switch-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding-top: 4px;
+}
+
+.theme-switch {
+  position: relative;
+  width: 52px;
+  height: 30px;
+  border-radius: 999px;
+  border: 1px solid var(--input-border);
+  background: var(--input-bg);
+  cursor: pointer;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.theme-switch__thumb {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--badge-muted-bg);
+  transition: transform 0.2s ease, background-color 0.2s ease;
+}
+
+.theme-switch.is-on {
+  background: var(--badge-bg);
+  border-color: var(--badge-bg);
+}
+
+.theme-switch.is-on .theme-switch__thumb {
+  transform: translateX(22px);
+  background: var(--badge-fg);
+}
+
+.theme-switch:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 2px;
+}
+
+.icon-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  border: 1px solid var(--icon-border);
+  border-radius: 999px;
+  background: var(--icon-bg);
+  color: var(--icon-fg);
+  cursor: pointer;
+  transition: transform 0.15s ease, background-color 0.15s ease, border-color 0.15s ease;
+}
+
+.icon-button:hover {
+  background: var(--icon-hover-bg);
+  border-color: var(--icon-hover-border);
+  transform: rotate(12deg);
+}
+
+.icon-button:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 2px;
+}
+
+.icon-button__icon {
+  width: 20px;
+  height: 20px;
+}
+
+.settings-overlay {
+  position: fixed;
+  inset: 0;
+  background: var(--settings-overlay-bg);
+  z-index: 950;
+}
+
+.settings-drawer {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: min(420px, 100vw);
+  min-height: 100vh;
+  padding: 24px;
+  background: var(--settings-drawer-bg);
+  border-left: 1px solid var(--settings-drawer-border);
+  box-shadow: var(--settings-drawer-shadow);
+  animation: settings-slide-in 0.18s ease-out;
+}
+
+.settings-drawer__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 22px;
+}
+
+.settings-drawer__header h3 {
+  margin: 0;
+  color: var(--settings-title);
+}
+
+.settings-drawer__subtitle {
+  margin: 8px 0 0;
+  color: var(--settings-subtitle);
+}
+
+.settings-close-button {
+  flex: 0 0 auto;
+}
+
+.settings-close-glyph {
+  font-size: 24px;
+  line-height: 1;
+}
+
+@keyframes settings-slide-in {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+.decklist-actions {
+  margin-top: 18px;
+  display: flex;
+  justify-content: flex-start;
+}
+
+.build-button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+  filter: none;
+}
+
+.primary-button,
+.secondary-button {
+  border: none;
+  border-radius: 10px;
+  height: 42px;
+  padding: 0 16px;
+  font: 600 14px/1 'IBM Plex Sans', 'Segoe UI', sans-serif;
+  cursor: pointer;
+}
+
+.primary-button {
+  background: var(--button-primary-bg);
+  color: var(--button-primary-fg);
+}
+
+.primary-button:hover {
+  filter: brightness(1.05);
+}
+
+.secondary-button {
+  background: var(--button-secondary-bg);
+  color: var(--button-secondary-fg);
+  cursor: pointer;
+}
+
+.secondary-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.missing-block {
+  margin-top: 14px;
+}
+
+.missing-block h4 {
+  margin: 0 0 8px;
+  font-size: 14px;
+  color: var(--missing-title);
+}
+
+.missing-list {
+  margin: 0;
+  padding-left: 18px;
+  color: var(--missing-list);
+}
+
+.error-text {
+  margin-top: 12px;
+  color: var(--error-text);
+  font-weight: 600;
+}
+
+.progress-overlay {
+  position: fixed;
+  inset: 0;
+  background: var(--progress-overlay-bg);
+  display: grid;
+  place-items: center;
+  z-index: 1000;
+  padding: 24px;
+}
+
+.progress-modal {
+  width: min(560px, 100%);
+  border-radius: 20px;
+  background: var(--progress-modal-bg);
+  border: 1px solid var(--progress-modal-border);
+  box-shadow: var(--progress-modal-shadow);
+  padding: 22px;
+}
+
+.progress-modal__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.progress-modal__header h2 {
+  margin: 0;
+}
+
+.progress-message {
+  margin-top: 12px;
+  color: var(--progress-message);
+}
+
+.progress-bar {
+  height: 12px;
+  border-radius: 999px;
+  background: var(--progress-track);
+  overflow: hidden;
+  margin-top: 16px;
+}
+
+.progress-bar__fill {
+  display: block;
+  width: 42%;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--progress-fill);
+  animation: progress-slide 1.2s ease-in-out infinite;
+}
+
+@keyframes progress-slide {
+  0% {
+    transform: translateX(-140%);
+  }
+  100% {
+    transform: translateX(260%);
+  }
+}
+
+.save-details {
+  margin-top: 14px;
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: var(--save-details-bg);
+  color: var(--save-details-fg);
+}
+
+.save-details p {
+  margin: 0;
+}
+
+.save-details p + p {
+  margin-top: 4px;
+}
+
+.progress-modal__actions {
+  margin-top: 18px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.progress-cancel-button {
+  cursor: pointer;
+}
