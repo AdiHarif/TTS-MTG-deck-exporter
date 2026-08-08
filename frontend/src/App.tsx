@@ -28,6 +28,8 @@ function App() {
     setDecklistText,
     proxyBaseUrl,
     setProxyBaseUrl,
+    hasLegalProxyBaseUrl,
+    proxyStatus,
     errorMessage,
     missingCards,
     runConversion,
@@ -56,6 +58,8 @@ function App() {
             value={decklistText}
             onChange={setDecklistText}
             onRunConversion={runConversion}
+            canRunConversion={hasLegalProxyBaseUrl}
+            proxyStatus={proxyStatus}
             isBusy={isProgressOpen}
             errorMessage={errorMessage}
             missingCards={missingCards}
@@ -67,6 +71,8 @@ function App() {
         isOpen={isSettingsOpen}
         onClose={() => setIsSettingsOpen(false)}
         proxyBaseUrl={proxyBaseUrl}
+        hasLegalProxyBaseUrl={hasLegalProxyBaseUrl}
+        proxyStatus={proxyStatus}
         onProxyBaseUrlChange={setProxyBaseUrl}
         isDarkMode={isDarkMode}
         onToggleDarkMode={() => setIsDarkMode((currentValue) => !currentValue)}

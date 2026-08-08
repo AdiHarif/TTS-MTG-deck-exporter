@@ -12,6 +12,13 @@ export function createApp({ host, port, cacheDir }: AppOptions) {
 
   app.disable('x-powered-by');
 
+  app.use((_req, res, next) => {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+    next();
+  });
+
   app.get('/ready', (_req, res) => {
     res.status(200).json({
       status: 'ready',

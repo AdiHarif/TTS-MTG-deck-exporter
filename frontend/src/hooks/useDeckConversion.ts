@@ -1,7 +1,12 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { convertDecklistToTtsJson, type ConversionResult } from '../lib/ttsConverter'
 import { downloadJsonFile } from '../lib/downloadJson'
 import { getPipelineStatusMessage, type PipelineState } from '../types/pipeline'
+import { useProxyReadiness } from './useProxyReadiness'
+export type { ProxyReadinessStatus } from './useProxyReadiness'
+
+const PROXY_STORAGE_KEY = 'tts-deck-builder-proxy-base-url'
+const PROXY_QUERY_PARAM = 'proxyBaseUrl'
 
 const sampleDecklist = `Deck
 4 Sol Ring
@@ -11,9 +16,31 @@ const sampleDecklist = `Deck
 Sideboard
 1 Cyclonic Rift`
 
+function resolveInitialProxyBaseUrl() {
+  const queryValue = new URLSearchParams(window.location.search).get(PROXY_QUERY_PARAM)?.trim()
+  if (queryValue) return queryValue
+
+  const storedValue = window.localStorage.getItem(PROXY_STORAGE_KEY)?.trim()
+  if (storedValue) return storedValue
+
+  return ''
+}
+
+function isLegalProxyBaseUrl(value: string) {
+  const normalizedValue = value.trim()
+  if (!normalizedValue) return false
+
+  try {
+    const parsedValue = new URL(normalizedValue)
+    return parsedValue.protocol === 'http:' || parsedValue.protocol === 'https:'
+  } catch {
+    return false
+  }
+}
+
 export function useDeckConversion() {
   const [decklistText, setDecklistText] = useState(sampleDecklist)
-  const [proxyBaseUrl, setProxyBaseUrl] = useState('http://127.0.0.1:8787')
+  const [proxyBaseUrl, setProxyBaseUrl] = useState(resolveInitialProxyBaseUrl)
   const [state, setState] = useState<PipelineState>('idle')
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
   const [missingCards, setMissingCards] = useState<string[]>([])
@@ -27,6 +54,19 @@ export function useDeckConversion() {
   const [savedDownloadMode, setSavedDownloadMode] = useState<'picker' | 'download' | null>(null)
   const [saveDialogError, setSaveDialogError] = useState<string | null>(null)
   const [currentAbortController, setCurrentAbortController] = useState<AbortController | null>(null)
+  const hasLegalProxyBaseUrl = useMemo(() => isLegalProxyBaseUrl(proxyBaseUrl), [proxyBaseUrl])
+  const proxyStatus = useProxyReadiness(proxyBaseUrl, hasLegalProxyBaseUrl)
+
+  useEffect(() => {
+    const normalizedProxyBaseUrl = proxyBaseUrl.trim()
+
+    if (normalizedProxyBaseUrl) {
+      window.localStorage.setItem(PROXY_STORAGE_KEY, normalizedProxyBaseUrl)
+      return
+    }
+
+    window.localStorage.removeItem(PROXY_STORAGE_KEY)
+  }, [proxyBaseUrl])
 
   function closeProgressDialog() {
     setIsProgressOpen(false)
@@ -76,6 +116,12 @@ export function useDeckConversion() {
   }
 
   async function runConversion() {
+    if (!hasLegalProxyBaseUrl) {
+      setErrorMessage('Set a valid proxy URL before building JSON (must start with http:// or https://).')
+      setState('error')
+      return
+    }
+
     setErrorMessage(null)
     setMissingCards([])
     setResult(null)
@@ -153,6 +199,8 @@ export function useDeckConversion() {
     errorMessage,
     missingCards,
     canDownload: Boolean(result),
+    hasLegalProxyBaseUrl,
+    proxyStatus,
     runConversion,
     downloadJson,
     isProgressOpen,

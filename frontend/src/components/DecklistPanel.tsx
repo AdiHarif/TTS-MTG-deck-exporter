@@ -1,7 +1,12 @@
+import { AlertTriangle } from 'lucide-react'
+import type { ProxyReadinessStatus } from '../hooks/useDeckConversion'
+
 type DecklistPanelProps = {
   value: string
   onChange: (value: string) => void
   onRunConversion: () => void
+  canRunConversion: boolean
+  proxyStatus: ProxyReadinessStatus
   isBusy: boolean
   errorMessage: string | null
   missingCards: string[]
@@ -11,6 +16,8 @@ export function DecklistPanel({
   value,
   onChange,
   onRunConversion,
+  canRunConversion,
+  proxyStatus,
   isBusy,
   errorMessage,
   missingCards,
@@ -37,10 +44,27 @@ export function DecklistPanel({
       </p>
 
       <div className="decklist-actions">
-        <button type="button" className="primary-button build-button" onClick={onRunConversion} disabled={isBusy}>
+        <button
+          type="button"
+          className="primary-button build-button"
+          onClick={onRunConversion}
+          disabled={isBusy || !canRunConversion}
+        >
           Build JSON
         </button>
       </div>
+
+      {!canRunConversion ? (
+        <p className="error-text proxy-warning" role="alert">
+          <AlertTriangle className="proxy-warning__icon" aria-hidden="true" />
+          <span>Set a valid proxy URL in Settings to enable Build JSON.</span>
+        </p>
+      ) : proxyStatus === 'unreachable' ? (
+        <p className="error-text proxy-warning" role="alert">
+          <AlertTriangle className="proxy-warning__icon" aria-hidden="true" />
+          <span>Proxy server is unreachable. Loading images in TTS may fail.</span>
+        </p>
+      ) : null}
 
       {missingCards.length ? (
         <section className="missing-block" aria-label="Missing cards">

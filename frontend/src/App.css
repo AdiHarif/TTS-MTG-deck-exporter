@@ -305,7 +305,9 @@
 }
 
 .build-button:disabled {
-  opacity: 0.7;
+  background: var(--button-disabled-bg);
+  color: var(--button-disabled-fg);
+  opacity: 1;
   cursor: not-allowed;
   filter: none;
 }
@@ -360,6 +362,57 @@
   margin-top: 12px;
   color: var(--error-text);
   font-weight: 600;
+}
+
+.proxy-warning {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  color: var(--warning-text);
+}
+
+.proxy-warning__icon {
+  flex: 0 0 auto;
+  width: 16px;
+  height: 16px;
+  margin-top: 2px;
+  color: var(--warning-icon);
+}
+
+.proxy-status {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 10px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.proxy-status.proxy-status--checking {
+  color: var(--hint-text);
+}
+
+.proxy-status.proxy-status--ready {
+  color: var(--status-ready);
+}
+
+.proxy-status.proxy-status--unreachable {
+  color: var(--status-unreachable);
+}
+
+.proxy-status__icon {
+  flex: 0 0 auto;
+  width: 14px;
+  height: 14px;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.spin {
+  animation: spin 1s linear infinite;
 }
 
 .progress-overlay {

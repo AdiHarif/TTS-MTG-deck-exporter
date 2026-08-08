@@ -1,7 +1,12 @@
+import { AlertTriangle, CheckCircle2, Loader2, XCircle } from 'lucide-react'
+import type { ProxyReadinessStatus } from '../hooks/useDeckConversion'
+
 type SettingsModalProps = {
   isOpen: boolean
   onClose: () => void
   proxyBaseUrl: string
+  hasLegalProxyBaseUrl: boolean
+  proxyStatus: ProxyReadinessStatus
   onProxyBaseUrlChange: (value: string) => void
   isDarkMode: boolean
   onToggleDarkMode: () => void
@@ -12,11 +17,15 @@ export function SettingsModal({
   isOpen,
   onClose,
   proxyBaseUrl,
+  hasLegalProxyBaseUrl,
+  proxyStatus,
   onProxyBaseUrlChange,
   isDarkMode,
   onToggleDarkMode,
   isBusy,
 }: SettingsModalProps) {
+  const showProxyWarning = proxyBaseUrl.trim().length > 0 && !hasLegalProxyBaseUrl
+
   if (!isOpen) return null
 
   return (
@@ -62,13 +71,30 @@ export function SettingsModal({
           type="text"
           value={proxyBaseUrl}
           onChange={(event) => onProxyBaseUrlChange(event.target.value)}
-          placeholder="http://127.0.0.1:8787"
           disabled={isBusy}
         />
 
         <p className="hint-text settings-hint">
           Generated FaceURL values will point to {proxyBaseUrl || 'your proxy base URL'}/v1/card/&lt;id&gt;.
         </p>
+
+        {hasLegalProxyBaseUrl ? (
+          <p className={`proxy-status proxy-status--${proxyStatus}`}>
+            {proxyStatus === 'checking' && <Loader2 className="proxy-status__icon spin" aria-hidden="true" />}
+            {proxyStatus === 'ready' && <CheckCircle2 className="proxy-status__icon" aria-hidden="true" />}
+            {proxyStatus === 'unreachable' && <XCircle className="proxy-status__icon" aria-hidden="true" />}
+            {proxyStatus === 'checking' && 'Checking server…'}
+            {proxyStatus === 'ready' && 'Server is ready'}
+            {proxyStatus === 'unreachable' && 'Server unreachable'}
+          </p>
+        ) : null}
+
+        {showProxyWarning ? (
+          <p className="error-text proxy-warning" role="alert">
+            <AlertTriangle className="proxy-warning__icon" aria-hidden="true" />
+            <span>Proxy URL is invalid. Use a full URL starting with http:// or https://.</span>
+          </p>
+        ) : null}
 
         <div className="settings-section-separator" aria-hidden="true">
           <span className="settings-section-separator__line" />

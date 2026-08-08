@@ -46,12 +46,18 @@
 
   --button-primary-bg: linear-gradient(120deg, #0f4ea8, #2b7ae8);
   --button-primary-fg: #f8fbff;
+  --button-disabled-bg: #aeb8c5;
+  --button-disabled-fg: #f6f8fc;
   --button-secondary-bg: #dce7f5;
   --button-secondary-fg: #486287;
 
   --missing-title: #254160;
   --missing-list: #7d3640;
   --error-text: #8a2020;
+  --warning-text: #8a5b00;
+  --warning-icon: #d19600;
+  --status-ready: #1a6b38;
+  --status-unreachable: #8a2020;
 
   --progress-overlay-bg: rgba(10, 18, 30, 0.48);
   --progress-modal-bg: rgba(255, 255, 255, 0.96);
@@ -146,10 +152,16 @@ html[data-theme='dark'] body {
 
   --button-secondary-bg: #1d2f44;
   --button-secondary-fg: #8dacd1;
+  --button-disabled-bg: #5d6879;
+  --button-disabled-fg: #d9e4f1;
 
   --missing-title: #b2c9e4;
   --missing-list: #e099a2;
   --error-text: #f19da6;
+  --warning-text: #f0cf84;
+  --warning-icon: #ffd254;
+  --status-ready: #5fd98a;
+  --status-unreachable: #f19da6;
 
   --progress-overlay-bg: rgba(2, 4, 8, 0.72);
   --progress-modal-bg: rgba(15, 25, 38, 0.97);
