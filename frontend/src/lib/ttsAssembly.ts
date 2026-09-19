@@ -1,5 +1,6 @@
 import type { ResolvedDeckEntry } from './decklist'
 import { enrichRecordRelatedTokens, buildCardObject, type TtsCardObject } from './cardBuilder'
+import { fetchCardById, relatedTokensFromCard } from './scryfall'
 
 export type AssembledOutput = {
   Transform: { posX: number; posY: number; posZ: number; rotX: number; rotY: number; rotZ: number; scaleX: number; scaleY: number; scaleZ: number }
@@ -56,6 +57,46 @@ export async function buildCardObjects(entries: ResolvedDeckEntry[], proxyBaseUr
     }
 
     const record = enrichRecordRelatedTokens({ ...entry.card })
+    const frontKey = counter
+    const isTwoSided = Boolean(record.card_faces && record.card_faces.length >= 2 && !record.image_uris)
+    const backKey = isTwoSided ? deckSize + counter : null
+    counter += 1
+
+    cardObjects.push(await buildCardObject(record, { front: frontKey, back: backKey }, proxyBaseUrl))
+  }
+
+  return cardObjects
+}
+
+export function collectUniqueTokenIds(entries: ResolvedDeckEntry[]): string[] {
+  const seen = new Set<string>()
+
+  for (const entry of entries) {
+    const tokens = relatedTokensFromCard(entry.card)
+    if (!tokens) continue
+    for (const token of tokens) {
+      if (token.uuid) seen.add(token.uuid)
+    }
+  }
+
+  return [...seen]
+}
+
+export async function buildTokenCardObjects(entries: ResolvedDeckEntry[], proxyBaseUrl: string, signal?: AbortSignal) {
+  const tokenIds = collectUniqueTokenIds(entries)
+  const cardObjects: TtsCardObject[] = []
+  const deckSize = tokenIds.length
+  let counter = 1
+
+  for (const tokenId of tokenIds) {
+    if (signal?.aborted) {
+      throw new DOMException('The operation was aborted.', 'AbortError')
+    }
+
+    const tokenCard = await fetchCardById(tokenId, signal)
+    if (!tokenCard) continue
+
+    const record = enrichRecordRelatedTokens({ ...tokenCard })
     const frontKey = counter
     const isTwoSided = Boolean(record.card_faces && record.card_faces.length >= 2 && !record.image_uris)
     const backKey = isTwoSided ? deckSize + counter : null

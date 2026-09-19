@@ -1,6 +1,6 @@
 import type { PipelineState } from '../types/pipeline'
 import { resolveDeckTextEntries } from './decklist'
-import { assembleOutput, buildCardObjects, type AssembledOutput } from './ttsAssembly'
+import { assembleOutput, buildCardObjects, buildTokenCardObjects, type AssembledOutput } from './ttsAssembly'
 
 type ConversionProgress = {
   stage: PipelineState
@@ -16,6 +16,7 @@ export type ConversionResult = {
   saveObject: { ObjectStates: AssembledOutput[] }
   mainCount: number
   sideboardCount: number
+  tokenCount: number
   totalCards: number
   missingCards: string[]
   downloadFileName: string
@@ -46,6 +47,9 @@ export async function convertDecklistToTtsJson(
   const mainCardObjects = await buildCardObjects(resolved.main, proxyBaseUrl, signal)
   const sideboardCardObjects = await buildCardObjects(resolved.sideboard, proxyBaseUrl, signal)
 
+  callbacks.onProgress?.({ stage: 'resolving', message: 'Resolving required tokens against Scryfall.' })
+  const tokenCardObjects = await buildTokenCardObjects([...resolved.main, ...resolved.sideboard], proxyBaseUrl, signal)
+
   callbacks.onProgress?.({ stage: 'building', message: 'Assembling Tabletop Simulator JSON.' })
 
   const deckName = 'decklist'
@@ -67,6 +71,17 @@ export async function convertDecklistToTtsJson(
     )
   }
 
+  if (tokenCardObjects.length) {
+    objectStates.push(
+      assembleOutput(
+        tokenCardObjects,
+        `${deckName} - Tokens`,
+        `${tokenCardObjects.length} tokens imported from ${baseFile}`,
+        8,
+      ),
+    )
+  }
+
   const saveObject = { ObjectStates: objectStates }
 
   callbacks.onProgress?.({ stage: 'success', message: 'Conversion complete.' })
@@ -75,6 +90,7 @@ export async function convertDecklistToTtsJson(
     saveObject,
     mainCount: mainCardObjects.length,
     sideboardCount: sideboardCardObjects.length,
+    tokenCount: tokenCardObjects.length,
     totalCards: mainCardObjects.length + sideboardCardObjects.length,
     missingCards,
     downloadFileName: 'tts-deck.json',
